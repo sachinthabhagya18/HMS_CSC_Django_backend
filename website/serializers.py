@@ -31,39 +31,80 @@ class ProfileSerializer(serializers.ModelSerializer):
 #         return user
 
 
+# class UserSerializer(serializers.ModelSerializer):
+#     profile = ProfileSerializer()
+    
+#     class Meta:
+#         model = User
+#         fields = ['first_name', 'last_name', 'username', 'password', 'email', 'profile']
+#         extra_kwargs = {
+#             'password': {'write_only': True}  # Important for security
+#         }
+        
+#     def create(self, validated_data):
+#         # First extract the profile data
+#         profile_data = validated_data.pop('profile')
+        
+#         # Create the user without the profile data
+#         user = User.objects.create(
+#             username=validated_data['username'],
+#             email=validated_data['email'],
+#             first_name=validated_data['first_name'],
+#             last_name=validated_data['last_name']
+#         )
+        
+#         # Set the password properly
+#         user.set_password(validated_data['password'])
+#         user.save()
+        
+#         # Now create the profile
+#         models.Profile.objects.create(
+#             user=user,
+#             mobile=profile_data['mobile']
+#         )
+        
+#         return user
+    
+
+
+
+
+
 class UserSerializer(serializers.ModelSerializer):
-    profile = ProfileSerializer()
+    profile = ProfileSerializer(required=True)
     
     class Meta:
         model = User
         fields = ['first_name', 'last_name', 'username', 'password', 'email', 'profile']
         extra_kwargs = {
-            'password': {'write_only': True}  # Important for security
+            'password': {'write_only': True}
         }
-        
+    
     def create(self, validated_data):
-        # First extract the profile data
         profile_data = validated_data.pop('profile')
         
-        # Create the user without the profile data
-        user = User.objects.create(
+        # Create user
+        user = User.objects.create_user(
             username=validated_data['username'],
             email=validated_data['email'],
-            first_name=validated_data['first_name'],
-            last_name=validated_data['last_name']
+            first_name=validated_data.get('first_name', ''),
+            last_name=validated_data.get('last_name', ''),
+            password=validated_data['password']
         )
         
-        # Set the password properly
-        user.set_password(validated_data['password'])
-        user.save()
-        
-        # Now create the profile
-        models.Profile.objects.create(
+        # Handle profile creation or update
+        profile, created = models.Profile.objects.get_or_create(
             user=user,
-            mobile=profile_data['mobile']
+            defaults={'mobile': profile_data['mobile']}
         )
+        
+        if not created:
+            # Profile already exists, update it
+            profile.mobile = profile_data['mobile']
+            profile.save()
         
         return user
+    
     
 class UserLoginSerializer(serializers.Serializer):
     mobile =  serializers.CharField()
