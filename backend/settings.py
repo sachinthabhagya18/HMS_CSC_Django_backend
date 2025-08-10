@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework',
     'rest_framework.authtoken',
+    'multi_tenancy'
 ]
 
 MIDDLEWARE = [
@@ -89,24 +90,17 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'hotel_managment_system',
+        'NAME': 'hotel_management_system',
         'USER': 'root',
         'PASSWORD': 'Kom2254772@sltbb',
-        'HOST': 'localhost',   # or IP addresscls
-        'PORT': '3306',        # default MySQL port
+        'HOST': 'localhost',
+        'PORT': '3306',
+        'OPTIONS': {
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+            'charset': 'utf8mb4',
+        }
     }
 }
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': os.environ.get('DATABASE_NAME', 'hotel_managment_system'),
-#         'USER': os.environ.get('DATABASE_USER', 'root'),
-#         'PASSWORD': os.environ.get('DATABASE_PASSWORD', 'Kom2254772@sltbb'),
-#         'HOST': os.environ.get('DATABASE_HOST', 'db'),  # 'localhost' → 'db'
-#         'PORT': os.environ.get('DATABASE_PORT', '3306'),
-#     }
-# }
 
 
 # Password validation

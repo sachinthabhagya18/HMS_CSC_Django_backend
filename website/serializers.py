@@ -109,3 +109,15 @@ class UserSerializer(serializers.ModelSerializer):
 class UserLoginSerializer(serializers.Serializer):
     mobile =  serializers.CharField()
     password = serializers.CharField()
+    
+
+class UserMobileSerializer(serializers.Serializer):
+    mobile =  serializers.CharField()
+    
+    
+class MobileOTPSerializer(serializers.Serializer):
+    otp =  serializers.CharField()
+    
+class ChangePasswordSerializer(serializers.Serializer):
+    mobile =  serializers.CharField()
+    password  =  serializers.CharField()
