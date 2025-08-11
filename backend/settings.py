@@ -91,7 +91,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'hotel_managment_system',
         'USER': 'root',
-        'PASSWORD': 'Kom2254772@sltbb',
+        'PASSWORD': '2001',
         'HOST': 'localhost',   # or IP addresscls
         'PORT': '3306',        # default MySQL port
     }
@@ -165,5 +165,5 @@ REST_FRAMEWORK = {
      'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
     ],
-    'PAGE_SIZE': 3
+    'PAGE_SIZE': 100
 }

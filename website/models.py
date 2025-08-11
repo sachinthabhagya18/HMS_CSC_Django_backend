@@ -24,9 +24,9 @@ class Contact(models.Model):
 
 
 class Profile(models.Model):
-    user=models.OneToOneField(User,on_delete=models.CASCADE)
-    profile_image=models.ImageField(upload_to='profile_imgs/',null=True)
-    mobile=models.IntegerField(null=True,unique=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    profile_image = models.ImageField(upload_to='profile_imgs/', null=True)
+    mobile = models.CharField(max_length=11, null=True, unique=True)
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, ** kwargs):

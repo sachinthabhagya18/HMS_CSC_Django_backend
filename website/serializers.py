@@ -46,22 +46,24 @@ class UserSerializer(serializers.ModelSerializer):
         profile_data = validated_data.pop('profile')
         
         # Create the user without the profile data
-        user = User.objects.create(
+        user = User.objects.create_user(
             username=validated_data['username'],
             email=validated_data['email'],
-            first_name=validated_data['first_name'],
-            last_name=validated_data['last_name']
+            first_name=validated_data.get('first_name', ''),
+            last_name=validated_data.get('last_name', ''),
+            password=validated_data['password']
         )
         
         # Set the password properly
-        user.set_password(validated_data['password'])
-        user.save()
-        
-        # Now create the profile
-        models.Profile.objects.create(
+        profile, created = models.Profile.objects.get_or_create(
             user=user,
-            mobile=profile_data['mobile']
+            defaults={'mobile': profile_data['mobile']}
         )
+        
+        if not created:
+            # Profile already exists, update it
+            profile.mobile = profile_data['mobile']
+            profile.save()
         
         return user
     
